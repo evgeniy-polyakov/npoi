@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Text;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip;
+using Ionic.Zip;
 
 namespace NPOI.OpenXml4Net.Util
 {

@@ -4,8 +4,8 @@ using System.Text;
 using System.Xml;
 using System.IO;
 using System.Collections;
+using Ionic.Zip;
 using NPOI.OpenXml4Net.Exceptions;
-using ICSharpCode.SharpZipLib.Zip;
 namespace NPOI.OpenXml4Net.OPC.Internal.Unmarshallers
 {
 /**

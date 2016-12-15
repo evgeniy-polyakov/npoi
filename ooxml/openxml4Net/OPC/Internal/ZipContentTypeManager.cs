@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Xml;
-using ICSharpCode.SharpZipLib.Zip;
+using Ionic.Zip;
 using NPOI.Util;
 namespace NPOI.OpenXml4Net.OPC.Internal
 {
@@ -39,10 +39,9 @@ public class ZipContentTypeManager:ContentTypeManager {
 		else
 			zos = new ZipOutputStream(out1);
 
-        ZipEntry partEntry = new ZipEntry(CONTENT_TYPES_PART_NAME);
-		try {
+        try {
 			// Referenced in ZIP
-            zos.PutNextEntry(partEntry);
+            zos.PutNextEntry(CONTENT_TYPES_PART_NAME);
 			// Saving data in the ZIP file
 			
 			StreamHelper.SaveXmlInStream(content, out1);
@@ -58,7 +57,6 @@ public class ZipContentTypeManager:ContentTypeManager {
                     zos.Write(buff, 0, resultRead);
                 }
             }
-			zos.CloseEntry();
 		} catch (IOException ioe) {
 			logger.Log(POILogger.ERROR, "Cannot write: " + CONTENT_TYPES_PART_NAME
 				+ " in Zip !", ioe);

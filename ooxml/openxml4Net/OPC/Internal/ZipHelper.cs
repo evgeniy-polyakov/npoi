@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip;
+using Ionic.Zip;
 
 namespace NPOI.OpenXml4Net.OPC.Internal
 {
@@ -45,7 +45,8 @@ namespace NPOI.OpenXml4Net.OPC.Internal
             if (corePropsRel == null)
                 return null;
 
-            ZipEntry ze = new ZipEntry(corePropsRel.TargetUri.OriginalString);
+            ZipEntry ze = new ZipEntry();
+            ze.FileName = corePropsRel.TargetUri.OriginalString;
             return ze;
         }
 
@@ -60,7 +61,7 @@ namespace NPOI.OpenXml4Net.OPC.Internal
             while (entries.MoveNext())
             {
                 ZipEntry entry = (ZipEntry)entries.Current;
-                if (entry.Name.Equals(
+                if (entry.FileName.Equals(
                         ContentTypeManager.CONTENT_TYPES_PART_NAME))
                     return entry;
             }
@@ -143,7 +144,7 @@ namespace NPOI.OpenXml4Net.OPC.Internal
                 return null;
             }
 
-            return new ZipFile(File.OpenRead(file.FullName));
+            return new ZipFile(file.FullName);
         }
         /**
          * Retrieve and open a zip file with the specified path.
@@ -159,7 +160,7 @@ namespace NPOI.OpenXml4Net.OPC.Internal
                 return null;
             }
 
-            return new ZipFile(File.OpenRead(path));
+            return new ZipFile(path);
         }
 
     }

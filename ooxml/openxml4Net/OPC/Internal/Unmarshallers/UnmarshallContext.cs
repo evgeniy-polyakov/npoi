@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ICSharpCode.SharpZipLib.Zip;
+using Ionic.Zip;
 
 namespace NPOI.OpenXml4Net.OPC.Internal.Unmarshallers
 {

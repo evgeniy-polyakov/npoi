@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using Ionic.Zip;
 using NPOI.OpenXml4Net.OPC.Internal;
 using NPOI.OpenXml4Net.OPC.Internal.Marshallers;
 using NPOI.OpenXml4Net.Exceptions;
 using Util=NPOI.OpenXml4Net.Util;
 using NPOI.OpenXml4Net.Util;
-using ICSharpCode.SharpZipLib.Zip;
 using NPOI.Util;
 
 namespace NPOI.OpenXml4Net.OPC
@@ -51,7 +51,7 @@ namespace NPOI.OpenXml4Net.OPC
         public ZipPackage(Stream in1, PackageAccess access)
             : base(access)
         {
-            this.zipArchive = new ZipInputStreamZipEntrySource(new ZipInputStream(in1));
+            this.zipArchive = new ZipFileZipEntrySource(ZipFile.Read(in1));
         }
 
         /**
@@ -140,7 +140,7 @@ namespace NPOI.OpenXml4Net.OPC
 		IEnumerator entries = this.zipArchive.Entries;
 		while (entries.MoveNext()) {
 			ZipEntry entry = (ZipEntry)entries.Current;
-            if (entry.Name.ToLower().Equals(
+            if (entry.FileName.ToLower().Equals(
                     ContentTypeManager.CONTENT_TYPES_PART_NAME.ToLower()))
             {
 				try {
@@ -223,13 +223,13 @@ namespace NPOI.OpenXml4Net.OPC
             {
                 // We get an error when we parse [Content_Types].xml
                 // because it's not a valid URI.
-                if (entry.Name.ToLower().Equals(
+                if (entry.FileName.ToLower().Equals(
                         ContentTypeManager.CONTENT_TYPES_PART_NAME.ToLower()))
                 {
                     return null;
                 }
                 return PackagingUriHelper.CreatePartName(ZipHelper
-                        .GetOPCNameFromZipItemName(entry.Name));
+                        .GetOPCNameFromZipItemName(entry.FileName));
             }
             catch (Exception)
             {
@@ -431,7 +431,7 @@ namespace NPOI.OpenXml4Net.OPC
                 else
                     zos = (ZipOutputStream)outputStream;
 
-                zos.UseZip64 = UseZip64.Off;
+                zos.EnableZip64 = Zip64Option.Never;
                 // If the core properties part does not exist in the part list,
                 // we save it as well
                 if (this.GetPartsByRelationshipType(

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip;
+using Ionic.Zip;
 
 namespace NPOI.OpenXml4Net.OPC.Internal.Marshallers
 {
@@ -23,18 +23,14 @@ public class ZipPackagePropertiesMarshaller:PackagePropertiesMarshaller
 		// Saving the part in the zip file
 		string name = ZipHelper
 				.GetZipItemNameFromOPCName(part.PartName.URI.ToString());
-        ZipEntry ctEntry = new ZipEntry(name);
-
         try
         {
             // Save in ZIP
-            zos.PutNextEntry(ctEntry); // Add entry in ZIP
+            zos.PutNextEntry(name); // Add entry in ZIP
 
             base.Marshall(part, out1); // Marshall the properties inside a XML
             // Document
             StreamHelper.SaveXmlInStream(xmlDoc, out1);
-
-            zos.CloseEntry();
         }
         catch (IOException e)
         {

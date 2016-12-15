@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using NPOI.OpenXml4Net.OPC;
 using System.Xml;
-using ICSharpCode.SharpZipLib.Zip;
+using Ionic.Zip;
 using NPOI.Util;
 
 namespace NPOI.OpenXml4Net.OPC.Internal.Marshallers
@@ -38,11 +38,10 @@ namespace NPOI.OpenXml4Net.OPC.Internal.Marshallers
             string name = ZipHelper
                     .GetZipItemNameFromOPCName(part.PartName.URI
                             .OriginalString);
-            ZipEntry partEntry = new ZipEntry(name);
             try
             {
                 // Create next zip entry
-                zos.PutNextEntry(partEntry);
+                zos.PutNextEntry(name);
 
                 // Saving data in the ZIP file
                 Stream ins = part.GetInputStream();
@@ -59,7 +58,6 @@ namespace NPOI.OpenXml4Net.OPC.Internal.Marshallers
                     zos.Write(buff, 0, resultRead);
                     totalRead += resultRead;
                 }
-                zos.CloseEntry();
             }
             catch (IOException ioe)
             {
@@ -155,14 +153,12 @@ namespace NPOI.OpenXml4Net.OPC.Internal.Marshallers
             // File.separator + "opc-relationships.xsd";
 
             // Save part in zip
-            ZipEntry ctEntry = new ZipEntry(ZipHelper.GetZipURIFromOPCName(
-                    relPartName.URI.ToString()).OriginalString);
             try
             {
-                zos.PutNextEntry(ctEntry);
+                zos.PutNextEntry(ZipHelper.GetZipURIFromOPCName(
+                    relPartName.URI.ToString()).OriginalString);
 
                 StreamHelper.SaveXmlInStream(xmlOutDoc, zos);
-                zos.CloseEntry();
             }
             catch (IOException e)
             {

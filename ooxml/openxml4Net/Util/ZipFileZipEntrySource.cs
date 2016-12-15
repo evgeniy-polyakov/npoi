@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip;
+using Ionic.Zip;
 
 namespace NPOI.OpenXml4Net.Util
 {
@@ -24,7 +24,7 @@ namespace NPOI.OpenXml4Net.Util
         {
             if (zipArchive != null)
             {
-                zipArchive.Close();
+                zipArchive.Dispose();
             }
         }
 
@@ -43,7 +43,11 @@ namespace NPOI.OpenXml4Net.Util
         {
             if (zipArchive == null)
                 throw new InvalidDataException("Zip File is closed");
-            Stream s = zipArchive.GetInputStream(entry);
+
+            var s = new MemoryStream();
+            entry.Extract(s);
+            s.Position = 0;
+
             return s;
         }
     }

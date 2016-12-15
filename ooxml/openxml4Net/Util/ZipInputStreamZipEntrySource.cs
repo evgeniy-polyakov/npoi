@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Collections;
-using ICSharpCode.SharpZipLib.Zip;
+using Ionic.Zip;
 
 namespace NPOI.OpenXml4Net.Util
 {
@@ -103,13 +103,13 @@ public class ZipInputStreamZipEntrySource:ZipEntrySource {
 	public class FakeZipEntry : ZipEntry {
 		private byte[] data;
 		
-		public FakeZipEntry(ZipEntry entry, ZipInputStream inp):base(entry.Name)
+		public FakeZipEntry(ZipEntry entry, ZipInputStream inp)
         {
 
             // Grab the de-compressed contents for later
             MemoryStream baos = new MemoryStream();
 
-            long entrySize = entry.Size;
+            long entrySize = entry.UncompressedSize;
 
             if (entrySize != -1)
             {
